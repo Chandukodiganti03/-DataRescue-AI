@@ -1,0 +1,166 @@
+<div class="chart-page">
+
+  <header class="chart-topbar">
+    <a routerLink="/" class="chart-brand">
+      <span class="chart-brand-icon">DR</span>
+      <span>
+        <strong>DataRescue AI</strong>
+        <small>Visual Analytics</small>
+      </span>
+    </a>
+
+    <a routerLink="/" class="back-link">← Dashboard</a>
+  </header>
+
+  <main class="chart-content">
+
+    <section class="chart-hero">
+      <span class="eyebrow">DATA INTELLIGENCE</span>
+      <h1>Create a New Chart</h1>
+      <p>
+        Visualize real statistics from your uploaded datasets.
+        Compare data quality, missing values, duplicates and dataset size.
+      </p>
+    </section>
+
+    <section class="chart-builder-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>Chart Configuration</h2>
+          <p>Choose the statistic you want to visualize.</p>
+        </div>
+        <span class="chart-icon">CHART</span>
+      </div>
+
+      <div class="chart-form">
+
+        <label for="chartMetric">Statistic</label>
+
+        <select
+          id="chartMetric"
+          name="selectedMetric"
+          [(ngModel)]="selectedMetric"
+          [disabled]="loading">
+
+          <option
+            *ngFor="let option of metricOptions"
+            [ngValue]="option.value">
+            {{ option.label }}
+          </option>
+
+        </select>
+
+        <div class="chart-form-footer">
+          <span>{{ datasets.length }} datasets available</span>
+
+          <button
+            type="button"
+            class="generate-button"
+            (click)="createChart()"
+            [disabled]="loading || datasets.length === 0">
+            Generate Chart →
+          </button>
+        </div>
+
+      </div>
+
+      <p class="page-message" *ngIf="loading">
+        Loading your datasets...
+      </p>
+
+      <p class="page-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+    </section>
+
+    <section class="chart-result-card">
+
+      <div class="result-heading">
+        <div>
+          <span class="eyebrow">CHART PREVIEW</span>
+          <h2>
+            {{ activeChart?.title || 'Your chart will appear here' }}
+          </h2>
+        </div>
+
+        <span class="result-badge" *ngIf="activeChart">
+          {{ activeChart.bars.length }} datasets
+        </span>
+      </div>
+
+      <ng-container *ngIf="activeChart as chart; else emptyChart">
+
+        <div class="bar-chart">
+
+          <div class="bar-item" *ngFor="let bar of chart.bars">
+
+            <div class="bar-label-row">
+              <span>{{ bar.label }}</span>
+              <strong>
+                {{ bar.value | number:'1.0-2' }}{{ chart.metric === 'qualityScore' ? '%' : '' }}
+              </strong>
+            </div>
+
+            <div class="bar-track">
+              <div
+                class="bar-fill"
+                [style.width.%]="bar.width">
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </ng-container>
+
+      <ng-template #emptyChart>
+        <div class="empty-chart">
+          <div class="empty-chart-icon">+</div>
+          <h3>No chart created yet</h3>
+          <p>Select a statistic above and click Generate Chart.</p>
+        </div>
+      </ng-template>
+
+    </section>
+
+    <section class="recent-section">
+
+      <div class="recent-heading">
+        <div>
+          <h2>Recent Charts</h2>
+          <p>Your five most recently generated charts.</p>
+        </div>
+
+        <span class="result-badge">{{ recentCharts.length }} saved</span>
+      </div>
+
+      <div class="recent-grid" *ngIf="recentCharts.length > 0">
+
+        <button
+          type="button"
+          class="recent-card"
+          *ngFor="let chart of recentCharts"
+          [class.selected]="activeChart?.id === chart.id"
+          (click)="selectChart(chart)">
+
+          <span class="recent-card-icon">CH</span>
+          <span class="recent-card-title">{{ chart.title }}</span>
+          <small>{{ chart.createdAt }}</small>
+          <span class="open-chart">View chart →</span>
+
+        </button>
+
+      </div>
+
+      <div class="recent-empty" *ngIf="recentCharts.length === 0">
+        No recent charts. Your created charts will appear here.
+      </div>
+
+    </section>
+
+  </main>
+
+</div>

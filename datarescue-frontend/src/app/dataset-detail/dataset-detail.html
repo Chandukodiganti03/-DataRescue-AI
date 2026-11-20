@@ -1,0 +1,422 @@
+<div class="detail-page">
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        DR
+      </div>
+
+      <div class="brand-text">
+        <h1>DataRescue AI</h1>
+        <span>Dataset Intelligence Platform</span>
+      </div>
+
+    </div>
+
+    <a
+      routerLink="/"
+      class="back-button">
+
+      ← Back to Dashboard
+
+    </a>
+
+  </header>
+
+
+  <main class="content">
+
+    <!-- LOADING -->
+
+    <div
+      class="loading-state"
+      *ngIf="loading">
+
+      <div class="loading-spinner"></div>
+
+      <span>
+        Loading dataset details...
+      </span>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="error-state"
+      *ngIf="errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- DATASET DETAILS -->
+
+    <ng-container *ngIf="dataset && !loading">
+
+      <section class="page-heading">
+
+        <span class="eyebrow">
+          DATASET ANALYSIS
+        </span>
+
+        <h2>
+          {{ dataset.fileName }}
+        </h2>
+
+        <p>
+          Detailed data quality analysis for this dataset.
+        </p>
+
+      </section>
+
+
+      <!-- OVERVIEW -->
+
+      <section class="overview-card">
+
+        <div class="file-section">
+
+          <div class="file-icon">
+            XLS
+          </div>
+
+          <div>
+
+            <h3>
+              {{ dataset.fileName }}
+            </h3>
+
+            <p>
+              Excel Dataset
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quality-section">
+
+          <span>
+            DATA QUALITY SCORE
+          </span>
+
+          <div class="quality-score">
+
+            <strong>
+              {{ dataset.qualityScore | number:'1.0-2' }}
+            </strong>
+
+            <small>
+              / 100
+            </small>
+
+          </div>
+
+          <div class="quality-status">
+
+            {{
+              dataset.qualityScore >= 80
+                ? 'Good Quality'
+                : dataset.qualityScore >= 60
+                  ? 'Needs Review'
+                  : 'Needs Cleaning'
+            }}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- STATISTICS -->
+
+      <section class="stats-grid">
+
+        <div class="stat-card">
+
+          <span>
+            TOTAL ROWS
+          </span>
+
+          <strong>
+            {{ dataset.totalRows }}
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>
+            TOTAL COLUMNS
+          </span>
+
+          <strong>
+            {{ dataset.totalColumns }}
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card warning">
+
+          <span>
+            MISSING VALUES
+          </span>
+
+          <strong>
+            {{ dataset.missingValues }}
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>
+            DUPLICATE ROWS
+          </span>
+
+          <strong>
+            {{ dataset.duplicateRows }}
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <!-- DATA QUALITY ANALYSIS -->
+
+      <section class="analysis-section">
+
+        <div class="section-heading">
+
+          <span class="eyebrow">
+            DATA QUALITY
+          </span>
+
+          <h2>
+            Analysis Summary
+          </h2>
+
+          <p>
+            DataRescue AI identified the following
+            quality indicators.
+          </p>
+
+        </div>
+
+
+        <div class="analysis-grid">
+
+          <div class="analysis-card">
+
+            <div class="analysis-icon">
+              M
+            </div>
+
+            <div>
+
+              <h3>
+                Missing Values
+              </h3>
+
+              <p>
+                This dataset contains
+                <strong>
+                  {{ dataset.missingValues }}
+                </strong>
+                missing values that may require attention.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="analysis-card">
+
+            <div class="analysis-icon">
+              D
+            </div>
+
+            <div>
+
+              <h3>
+                Duplicate Records
+              </h3>
+
+              <p>
+                DataRescue AI detected
+                <strong>
+                  {{ dataset.duplicateRows }}
+                </strong>
+                duplicate rows in this dataset.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="analysis-card">
+
+            <div class="analysis-icon">
+              Q
+            </div>
+
+            <div>
+
+              <h3>
+                Quality Status
+              </h3>
+
+              <p>
+
+                {{
+                  dataset.qualityScore >= 80
+                    ? 'The dataset has good overall quality.'
+                    : dataset.qualityScore >= 60
+                      ? 'The dataset should be reviewed before use.'
+                      : 'The dataset requires cleaning before use.'
+                }}
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RECOMMENDATIONS -->
+
+      <section class="recommendation-section">
+
+        <div class="section-heading">
+
+          <span class="eyebrow">
+            DATARESCUE RECOMMENDATIONS
+          </span>
+
+          <h2>
+            Recommended Actions
+          </h2>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+          <div class="recommendation-number">
+            01
+          </div>
+
+          <div>
+
+            <h3>
+              Review missing values
+            </h3>
+
+            <p>
+              Check the columns containing missing data
+              and determine whether values should be
+              repaired, replaced or removed.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+          <div class="recommendation-number">
+            02
+          </div>
+
+          <div>
+
+            <h3>
+              Validate dataset structure
+            </h3>
+
+            <p>
+              Review column names, data types and
+              formatting before using the dataset
+              for analytics.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+          <div class="recommendation-number">
+            03
+          </div>
+
+          <div>
+
+            <h3>
+              Prepare the dataset for analysis
+            </h3>
+
+            <p>
+              Clean identified quality issues before
+              using the dataset for reporting or
+              machine learning workflows.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- FUTURE ACTIONS -->
+
+      <section class="actions-section">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="cleanDataset()"
+          [disabled]="loading">
+
+          {{ loading ? 'Cleaning Dataset...' : 'Clean Dataset' }}
+
+        </button>
+
+        <button
+            type="button"
+            class="secondary-button"
+            (click)="previewDataset()">
+
+            Preview Data
+
+        </button>
+
+      </section>
+
+    </ng-container>
+
+  </main>
+
+</div>
+
+

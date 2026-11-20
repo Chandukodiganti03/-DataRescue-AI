@@ -1,0 +1,445 @@
+<div class="dashboard-page">
+
+  <!-- TOP NAVIGATION -->
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        DR
+      </div>
+
+      <div class="brand-text">
+        <h1>DataRescue AI</h1>
+        <span>Dataset Intelligence Platform</span>
+      </div>
+
+    </div>
+
+    <div class="topbar-right">
+
+      <div class="system-status">
+        <span class="status-dot"></span>
+        System Ready
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN CONTENT -->
+
+  <main class="content">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <span class="eyebrow">
+          DATA INTELLIGENCE
+        </span>
+
+        <h2>
+          Turn messy data into
+          <span>useful insights.</span>
+        </h2>
+
+        <p>
+          Upload your dataset and let DataRescue AI
+          automatically detect data-quality issues,
+          missing values and duplicates.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          routerLink="/upload">
+
+          <span>+</span>
+
+          Analyze New Dataset
+
+        </button>
+
+      </div>
+
+
+      <div class="hero-visual">
+
+        <div class="visual-card">
+
+          <div class="visual-header">
+
+            <span>DATA QUALITY</span>
+
+            <span class="mini-status">
+              LIVE
+            </span>
+
+          </div>
+
+          <div class="visual-score">
+            48.82
+            <small>/100</small>
+          </div>
+
+          <div class="score-bar">
+
+            <div class="score-progress"></div>
+
+          </div>
+
+          <p>
+            Dataset requires cleaning
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          DB
+        </div>
+
+        <div>
+
+          <span>
+            DATASETS
+          </span>
+
+          <strong>
+            {{ datasets.length }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ROW
+        </div>
+
+        <div>
+
+          <span>
+            LATEST ROWS
+          </span>
+
+          <strong>
+
+            {{
+              datasets.length > 0
+                ? datasets[0].totalRows
+                : 0
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          COL
+        </div>
+
+        <div>
+
+          <span>
+            LATEST COLUMNS
+          </span>
+
+          <strong>
+
+            {{
+              datasets.length > 0
+                ? datasets[0].totalColumns
+                : 0
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card quality-card">
+
+        <div class="stat-icon">
+          AI
+        </div>
+
+        <div>
+
+          <span>
+            DATA QUALITY
+          </span>
+
+          <strong>
+
+            {{
+              datasets.length > 0
+                ? (datasets[0].qualityScore | number:'1.0-2')
+                : 0
+            }}
+
+            <small>/100</small>
+
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RECENT DATASETS -->
+
+    <section class="datasets-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="eyebrow">
+            WORKSPACE
+          </span>
+
+          <h2>
+            Recent Datasets
+          </h2>
+
+          <p>
+            Review your latest dataset analyses.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          routerLink="/upload">
+
+          Analyze Dataset
+          <span>→</span>
+
+        </button>
+
+      </div>
+
+
+      <!-- LOADING -->
+
+      <div
+        class="loading-state"
+        *ngIf="loading">
+
+        <div class="loading-spinner"></div>
+
+        <span>
+          Loading datasets...
+        </span>
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        class="error-state"
+        *ngIf="errorMessage">
+
+        {{ errorMessage }}
+
+      </div>
+
+
+      <!-- DATASET LIST -->
+
+      <div
+        class="dataset-list"
+        *ngIf="!loading && datasets.length > 0">
+
+
+        <article
+          class="dataset-row"
+          *ngFor="let dataset of datasets">
+
+
+          <!-- FILE -->
+
+          <div class="dataset-file">
+
+            <div class="file-icon">
+              XLS
+            </div>
+
+            <div>
+
+              <h3>
+                {{ dataset.fileName }}
+              </h3>
+
+              <p>
+                Excel Dataset
+                <span>•</span>
+                {{ dataset.totalRows }} rows
+                <span>•</span>
+                {{ dataset.totalColumns }} columns
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- DATA QUALITY -->
+
+          <div class="quality-info">
+
+            <div class="quality-number">
+
+              <strong>
+                {{ dataset.qualityScore | number:'1.0-2' }}
+              </strong>
+
+              <span>
+                / 100
+              </span>
+
+            </div>
+
+            <span class="quality-label">
+              {{
+                dataset.qualityScore >= 80
+                  ? 'Good Quality'
+                  : dataset.qualityScore >= 60
+                    ? 'Needs Review'
+                    : 'Needs Cleaning'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- DATA ISSUES -->
+
+          <div class="issues">
+
+            <div>
+
+              <span>
+                Missing
+              </span>
+
+              <strong>
+                {{ dataset.missingValues }}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>
+                Duplicates
+              </span>
+
+              <strong>
+                {{ dataset.duplicateRows }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACTION -->
+
+        <div class="dataset-action">
+
+          <button
+            type="button"
+            class="view-button"
+            (click)="viewDataset(dataset.id)">
+
+            View
+            <span>→</span>
+
+          </button>
+
+          <button
+            type="button"
+            class="delete-button"
+            (click)="deleteDataset(dataset.id)">
+
+            Delete
+
+          </button>
+
+        </div>
+
+
+        </article>
+
+      </div>
+
+
+      <!-- EMPTY -->
+
+      <div
+        class="empty-state"
+        *ngIf="!loading && datasets.length === 0">
+
+        <div class="empty-icon">
+          +
+        </div>
+
+        <h3>
+          No datasets yet
+        </h3>
+
+        <p>
+          Upload your first dataset to begin analyzing
+          data quality.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          routerLink="/upload">
+
+          Upload Dataset
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+</div>

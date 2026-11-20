@@ -1,0 +1,357 @@
+
+<button
+  *ngIf="!isOpen"
+  class="chat-launcher"
+  type="button"
+  (click)="toggleChat()"
+  aria-label="Open DataRescue AI chatbot">
+  <span class="launcher-icon">AI</span>
+  <span>Chat with DataRescue AI</span>
+</button>
+
+<section class="chat-window" *ngIf="isOpen">
+  <header class="chat-header">
+    <div class="header-info">
+      <div class="ai-avatar">AI</div>
+      <div>
+
+        <h2>{{ isChartChat ? 'New Chart Conversation' : 'DataRescue AI' }}</h2>
+
+        <p>
+          {{ isChartChat
+              ? 'Ask questions about the chart you want to create'
+              : 'Dataset assistant' }}
+        </p>
+
+      </div>
+
+
+<button
+  *ngIf="isChartChat"
+  type="button"
+  class="charts-menu-button"
+  (click)="returnToDatasetChat()">
+  Back to chat
+</button>
+
+
+<button
+  type="button"
+  class="charts-menu-button"
+  (click)="toggleCharts()"
+  [attr.aria-expanded]="showCharts">
+  {{ showCharts ? 'Hide Charts' : 'Charts' }}
+</button>
+    </div>
+
+    <button
+      class="close-button"
+      type="button"
+      (click)="toggleChat()"
+      aria-label="Close chatbot">
+      &times;
+    </button>
+  </header>
+
+<div class="dataset-selector">
+  <label for="datasetId">Dataset ID</label>
+
+  <input
+    id="datasetId"
+    type="number"
+    min="1"
+    [(ngModel)]="datasetId"
+    (ngModelChange)="updateDatasetName()"
+    [disabled]="isLoading">
+
+  <h3 class="selected-dataset" *ngIf="datasetName">
+    {{ datasetName }}
+  </h3>
+</div>
+
+
+
+<!-- CHATBOT CHARTS -->
+<!-- 
+<section class="chat-charts" *ngIf="showCharts">
+
+  <div class="charts-heading">
+    <div>
+      <h3>Dataset Charts</h3>
+      <p>Explore statistics from your datasets.</p>
+    </div>
+  </div>
+
+  <div class="chart-view-tabs">
+    <button
+    type="button"
+    (click)="startNewChartChat()">
+    + Create New Chart
+  </button>
+
+<button
+  type="button"
+  routerLink="/chart-builder">
+  + Create Builder
+</button>
+
+    <button
+      type="button"
+      [class.active]="chartMode === 'recent'"
+      (click)="openRecentCharts()">
+      Recent Charts
+      <span class="chart-count">{{ recentCharts.length }}</span>
+    </button>
+  </div>
+
+  <div class="chart-builder" *ngIf="chartMode === 'create'">
+    <label for="chartMetric">Choose a statistic</label>
+
+    <div class="chart-builder-controls">
+      <select
+        id="chartMetric"
+        name="selectedChartMetric"
+        [(ngModel)]="selectedChartMetric">
+        <option
+          *ngFor="let option of chartMetricOptions"
+          [ngValue]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+
+      <button
+        type="button"
+        class="generate-chart-button"
+        (click)="createNewChart()"
+        [disabled]="datasets.length === 0">
+        Generate
+      </button>
+    </div>
+  </div>
+
+  <p class="chart-error" *ngIf="chartError">
+    {{ chartError }}
+  </p>
+
+  <div
+    class="recent-chat-charts"
+    *ngIf="chartMode === 'recent'">
+
+    <p class="no-charts" *ngIf="recentCharts.length === 0">
+      No charts created yet. Create your first chart to see it here.
+    </p>
+
+    <button
+      type="button"
+      class="recent-chat-chart"
+      *ngFor="let chart of recentCharts"
+      [class.active]="activeChart?.id === chart.id"
+      (click)="showChart(chart)">
+
+      <span>{{ chart.title }}</span>
+      <small>{{ chart.createdAt }}</small>
+    </button>
+
+  </div>
+
+  <div class="chat-chart-preview" *ngIf="activeChart as chart">
+
+    <div class="preview-heading">
+      <h4>{{ chart.title }}</h4>
+      <span>{{ chart.bars.length }} datasets</span>
+    </div>
+
+    <div class="chat-chart-bar" *ngFor="let bar of chart.bars">
+
+      <div class="chat-chart-label">
+        <span>{{ bar.label }}</span>
+        <strong>
+          {{ bar.value | number:'1.0-2' }}{{ chart.title.startsWith('Data Quality') ? '%' : '' }}
+        </strong>
+      </div>
+
+      <div class="chat-chart-track">
+        <div
+          class="chat-chart-fill"
+          [style.width.%]="bar.width">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+ -->
+
+
+
+
+
+
+
+
+<section class="chat-charts" *ngIf="showCharts">
+
+  <div class="charts-heading">
+    <h3>Dataset Charts</h3>
+    <p>Create and explore your dataset charts.</p>
+  </div>
+
+  <!-- Three separate buttons -->
+  <div class="chart-view-tabs">
+
+      <button
+        type="button"
+        (click)="startNewChartChat()">
+        + Create New Chart
+      </button>
+
+    <button
+      type="button"
+      [class.active]="chartMode === 'recent'"
+      (click)="openRecentCharts()">
+      Recent Charts ({{ recentCharts.length }})
+    </button>
+
+    <button
+      type="button"
+      class="builder-button"
+      (click)="openChartBuilder()">
+      Create Builder
+    </button>
+
+  </div>
+
+  <!-- Chart creation stays inside the chatbot -->
+  <div class="chart-builder-inline" *ngIf="chartMode === 'create'">
+
+    <label for="chartMetric">Choose a statistic</label>
+
+    <div class="chart-builder-controls">
+
+      <select
+        id="chartMetric"
+        name="selectedChartMetric"
+        [(ngModel)]="selectedChartMetric">
+
+        <option
+          *ngFor="let option of chartMetricOptions"
+          [ngValue]="option.value">
+          {{ option.label }}
+        </option>
+
+      </select>
+
+      <button
+        type="button"
+        class="generate-chart-button"
+        (click)="createNewChart()"
+        [disabled]="datasets.length === 0">
+        Generate
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Recent charts stay inside the chatbot -->
+  <div class="recent-chat-charts" *ngIf="chartMode === 'recent'">
+
+    <p *ngIf="recentCharts.length === 0">
+      No charts created yet.
+    </p>
+
+    <button
+      type="button"
+      class="recent-chat-chart"
+      *ngFor="let chart of recentCharts"
+      [class.active]="activeChart?.id === chart.id"
+      (click)="showChart(chart)">
+
+      <span>{{ chart.title }}</span>
+      <small>{{ chart.createdAt }}</small>
+
+    </button>
+
+  </div>
+
+  <!-- Chart preview -->
+  <div class="chat-chart-preview" *ngIf="activeChart as chart">
+
+    <h4>{{ chart.title }}</h4>
+
+    <div class="chat-chart-bar" *ngFor="let bar of chart.bars">
+
+      <div class="chat-chart-label">
+        <span>{{ bar.label }}</span>
+        <strong>
+          {{ bar.value | number:'1.0-2' }}{{ chart.metric === 'qualityScore' ? '%' : '' }}
+        </strong>
+      </div>
+
+      <div class="chat-chart-track">
+        <div
+          class="chat-chart-fill"
+          [style.width.%]="bar.width">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+<div class="messages" #messageContainer>
+  <div
+    *ngFor="let message of messages"
+    class="message-row"
+    [class.user-row]="message.role === 'user'"
+    [class.ai-row]="message.role === 'assistant'">
+
+    <div class="message-bubble">
+      <span class="message-role">
+        {{ message.role === 'user' ? 'You' : 'DataRescue AI' }}
+      </span>
+      <p>{{ message.text }}</p>
+    </div>
+  </div>
+
+  <div class="typing-indicator" *ngIf="isLoading">
+    DataRescue AI is thinking...
+  </div>
+</div>
+
+
+  <p class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+
+  <form class="chat-input-area" (ngSubmit)="sendMessage()">
+    <input
+      type="text"
+      name="question"
+      [(ngModel)]="question"
+      placeholder="Ask about your dataset..."
+      maxlength="1000"
+      autocomplete="off"
+      [disabled]="isLoading"
+      required>
+
+    <button
+      type="submit"
+      [disabled]="isLoading || !question.trim()">
+      {{ isLoading ? '...' : 'Send' }}
+    </button>
+  </form>
+</section>

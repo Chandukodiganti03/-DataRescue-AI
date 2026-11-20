@@ -1,0 +1,520 @@
+
+:host {
+  font-family: Arial, sans-serif;
+}
+
+.chat-launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 30px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.launcher-icon,
+.ai-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.launcher-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.chat-window {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 32px));
+  height: min(600px, calc(100vh - 48px));
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 12px 45px rgba(15, 23, 42, 0.25);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.chat-header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.close-button {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.dataset-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+}
+
+.dataset-selector input {
+  width: 90px;
+  padding: 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f8fafc;
+}
+
+.message-row {
+  display: flex;
+  margin-bottom: 14px;
+}
+
+.user-row {
+  justify-content: flex-end;
+}
+
+.ai-row {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 88%;
+  padding: 11px 13px;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+.user-row .message-bubble {
+  background: #2563eb;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.ai-row .message-bubble {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 4px;
+}
+
+.message-role {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.message-bubble p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.typing-indicator {
+  padding: 8px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.error-message {
+  margin: 0;
+  padding: 8px 14px;
+  color: #b91c1c;
+  font-size: 12px;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.chat-input-area input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+}
+
+.chat-input-area input:focus {
+  border-color: #2563eb;
+}
+
+.chat-input-area button {
+  padding: 0 16px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chat-input-area button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .chat-window {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+    height: calc(100vh - 16px);
+  }
+
+  .chat-launcher {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+
+
+
+
+
+.dataset-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.dataset-selector input {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.selected-dataset {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+
+
+
+/* Dataset charts */
+
+/* Clean chart workspace */
+
+.chat-charts {
+  padding: 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eaf0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.charts-heading h3 {
+  margin: 0;
+  color: #202b3c;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.charts-heading p {
+  margin: 5px 0 14px;
+  color: #8490a2;
+  font-size: 11px;
+}
+
+.chart-view-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 4px;
+  background: #f2f4f8;
+  border-radius: 9px;
+}
+
+.chart-view-tabs button {
+  min-width: 0;
+  padding: 9px 5px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #647086;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-view-tabs button.active {
+  border-color: #e2e6ed;
+  background: #ffffff;
+  color: #202b3c;
+  box-shadow: 0 1px 3px rgba(25, 35, 55, 0.06);
+}
+
+.chart-count {
+  display: inline-block;
+  margin-left: 3px;
+  color: #8994a5;
+}
+
+.chart-builder {
+  margin-top: 14px;
+}
+
+.chart-builder label {
+  display: block;
+  margin-bottom: 7px;
+  color: #586579;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chart-builder-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.chart-builder-controls select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #dfe4eb;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #354055;
+  font-size: 11px;
+}
+
+.generate-chart-button {
+  padding: 10px 13px;
+  border: none;
+  border-radius: 7px;
+  background: #202b3c;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.generate-chart-button:hover {
+  background: #35435a;
+}
+
+.generate-chart-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chart-error {
+  margin: 10px 0 0;
+  color: #b54747;
+  font-size: 11px;
+}
+
+.recent-chat-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.no-charts {
+  margin: 8px 0;
+  color: #8993a3;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.recent-chat-chart {
+  display: block;
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid #e5e9ef;
+  border-radius: 8px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.recent-chat-chart:hover,
+.recent-chat-chart.active {
+  border-color: #b9c4d3;
+  background: #f7f8fb;
+}
+
+.recent-chat-chart span,
+.recent-chat-chart small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.recent-chat-chart span {
+  color: #354055;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.recent-chat-chart small {
+  margin-top: 4px;
+  color: #8993a3;
+  font-size: 10px;
+}
+
+.chat-chart-preview {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #edf0f4;
+}
+
+.preview-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.preview-heading h4 {
+  margin: 0;
+  color: #354055;
+  font-size: 12px;
+}
+
+.preview-heading span {
+  flex-shrink: 0;
+  color: #8993a3;
+  font-size: 10px;
+}
+
+.chat-chart-bar {
+  margin-top: 12px;
+}
+
+.chat-chart-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.chat-chart-label span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #687589;
+  font-size: 10px;
+}
+
+.chat-chart-label strong {
+  flex-shrink: 0;
+  color: #354055;
+  font-size: 10px;
+}
+
+.chat-chart-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #edf0f5;
+}
+
+.chat-chart-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: #596b87;
+  transition: width 0.25s ease;
+}
+
+
+
+.chart-view-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.chart-view-tabs button {
+  padding: 10px 8px;
+  border: 1px solid #dfe4eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #354055;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-view-tabs button.active {
+  background: #f0f3f7;
+  border-color: #aeb9c8;
+}
+
+.chart-view-tabs .builder-button {
+  grid-column: 1 / -1;
+  background: #172033;
+  color: #fff;
+  border-color: #172033;
+}
+
+.chart-builder-inline {
+  margin-bottom: 14px;
+}
+
+.chart-builder-inline label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 11px;
+  font-weight: 600;
+}

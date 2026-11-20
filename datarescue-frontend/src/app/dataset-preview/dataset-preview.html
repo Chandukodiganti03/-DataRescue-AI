@@ -1,0 +1,214 @@
+<div class="preview-page">
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        DR
+      </div>
+
+      <div class="brand-text">
+        <h1>DataRescue AI</h1>
+        <span>Dataset Intelligence Platform</span>
+      </div>
+
+    </div>
+
+    <a
+      routerLink="/"
+      class="back-button">
+
+      ← Dashboard
+
+    </a>
+
+  </header>
+
+
+  <main class="content">
+
+    <!-- LOADING -->
+
+    <div
+      class="loading-state"
+      *ngIf="loading">
+
+      <div class="loading-spinner"></div>
+
+      <span>
+        Loading dataset preview...
+      </span>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="error-state"
+      *ngIf="errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- PREVIEW -->
+
+    <ng-container *ngIf="preview && !loading">
+
+      <section class="page-heading">
+
+        <span class="eyebrow">
+          DATA PREVIEW
+        </span>
+
+        <h2>
+          {{ preview.fileName }}
+        </h2>
+
+        <p>
+          Preview of the first 20 records from your dataset.
+        </p>
+
+      </section>
+
+
+      <section class="preview-card">
+
+        <div class="preview-header">
+
+          <div>
+
+            <h3>
+              Dataset Records
+            </h3>
+
+            <p>
+              {{ preview.columns.length }} columns
+              · {{ preview.rows.length }} preview rows
+            </p>
+
+          </div>
+
+          <div class="preview-badge">
+            PREVIEW
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th
+                  *ngFor="
+                    let column of preview.columns;
+                    let columnIndex = index
+                  ">
+
+                  <div class="column-number">
+                    {{ columnIndex + 1 }}
+                  </div>
+
+                  {{ column }}
+
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr
+                *ngFor="
+                  let row of preview.rows;
+                  let rowIndex = index
+                ">
+
+                <td
+                  *ngFor="
+                    let column of preview.columns;
+                    let columnIndex = index
+                  ">
+
+                  <span
+                    *ngIf="row[columnIndex];
+                    else emptyCell">
+
+                    {{ row[columnIndex] }}
+
+                  </span>
+
+                  <ng-template #emptyCell>
+
+                    <span class="empty-value">
+                      —
+                    </span>
+
+                  </ng-template>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="preview-footer">
+
+          Showing first
+          <strong>
+            {{ preview.rows.length }}
+          </strong>
+          rows of the dataset.
+
+        </div>
+
+      </section>
+
+
+      <section class="info-section">
+
+        <div class="info-card">
+
+          <div class="info-icon">
+            I
+          </div>
+
+          <div>
+
+            <h3>
+              Why preview your data?
+            </h3>
+
+            <p>
+              Review the original dataset before cleaning.
+              DataRescue AI can identify missing values,
+              duplicate records, formatting problems and
+              other data-quality issues.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+  </main>
+
+</div>

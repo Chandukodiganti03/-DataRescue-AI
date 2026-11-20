@@ -1,0 +1,379 @@
+
+<div class="report-page">
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">DR</div>
+      <div class="brand-text">
+        <span class="brand-name">DataRescue AI</span>
+        <span class="brand-subtitle">Intelligent Data Quality</span>
+      </div>
+    </div>
+
+    <a routerLink="/datasets" class="dashboard-link">
+      ← Back to Datasets
+    </a>
+  </header>
+
+  <!-- Main Content -->
+  <main class="report-container">
+
+    <!-- Page Heading -->
+    <section class="report-header">
+      <span class="eyebrow">DATA ANALYTICS / QUALITY REPORT</span>
+      <h1>Data Quality Report</h1>
+      <p>Detailed analysis of your dataset and cleaning results.</p>
+    </section>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      Analyzing dataset quality...
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <ng-container *ngIf="!loading && report">
+
+      <!-- Quality Status Hero -->
+      <section
+        class="result-section"
+        [ngClass]="{
+          'status-excellent': report.qualityStatus === 'Excellent',
+          'status-good': report.qualityStatus === 'Good',
+          'status-needs-improvement': report.qualityStatus === 'Needs Improvement',
+          'status-poor': report.qualityStatus === 'Poor'
+        }">
+
+        <div class="result-icon">
+          <span *ngIf="report.qualityStatus === 'Excellent'">✓</span>
+          <span *ngIf="report.qualityStatus === 'Good'">✓</span>
+          <span *ngIf="report.qualityStatus === 'Needs Improvement'">!</span>
+          <span *ngIf="report.qualityStatus === 'Poor'">×</span>
+        </div>
+
+        <div class="result-content">
+          <span class="eyebrow">ANALYZED DATASET</span>
+          <h2>{{ report.fileName }}</h2>
+          <p>{{ report.qualityExplanation }}</p>
+        </div>
+
+        <div class="score-display">
+          <strong>
+            {{ report.cleanedQualityScore | number:'1.1-2' }}
+          </strong>
+          <span>Quality score / 100</span>
+        </div>
+      </section>
+
+      <!-- Data Quality Issues -->
+      <section class="stats-section">
+        <div class="section-heading">
+          <span class="eyebrow">DATA DIAGNOSTICS</span>
+          <h3>Data Quality Issues</h3>
+          <p>Findings detected by analyzing the original Excel file.</p>
+        </div>
+
+        <div class="stats-grid">
+
+          <article class="stat-card">
+            <span class="stat-label">MISSING VALUES</span>
+            <strong>{{ report.missingValues }}</strong>
+            <small>Empty cells in rows containing data</small>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">DUPLICATE RECORDS</span>
+            <strong>{{ report.duplicateRecordsDetected }}</strong>
+            <small>Repeated data rows detected</small>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">EMPTY COLUMNS</span>
+            <strong>{{ report.emptyColumnsDetected }}</strong>
+            <small>Columns without data below the header</small>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">QUALITY IMPROVEMENT</span>
+            <strong>{{ report.qualityImprovement | number:'1.1-2' }}</strong>
+            <small>Change in quality score after cleaning</small>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Missing Values Table -->
+      <section class="quality-section">
+        <div class="section-heading">
+          <span class="eyebrow">COLUMN ANALYSIS</span>
+          <h3>Columns With Missing Values</h3>
+          <p>Review the columns that contain empty cells in the original dataset.</p>
+        </div>
+
+        <div
+          *ngIf="report.columnsWithMissingValues.length === 0"
+          class="structural-note">
+          <strong>No missing values detected</strong>
+          <p>No missing values were detected in the analyzed data rows.</p>
+        </div>
+
+        <div
+          *ngIf="report.columnsWithMissingValues.length > 0"
+          class="table-wrapper">
+
+          <table>
+            <thead>
+              <tr>
+                <th>Column name</th>
+                <th>Missing cells</th>
+                <th>Missing percentage</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let column of report.columnsWithMissingValues">
+                <td>{{ column.columnName }}</td>
+                <td>{{ column.missingCount }}</td>
+                <td>
+                  <span
+                    class="missing-percentage"
+                    [class.high]="column.missingPercentage >= 50"
+                    [class.low]="column.missingPercentage < 5">
+                    {{ column.missingPercentage | number:'1.1-2' }}%
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </section>
+
+      <!-- Cleaning Summary -->
+      <section class="changes-section">
+        <div class="section-heading">
+          <span class="eyebrow">CLEANING OPERATIONS</span>
+          <h3>Cleaning Summary</h3>
+          <p>A summary of the structural changes made during cleaning.</p>
+        </div>
+
+        <div class="change-list">
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">OR</div>
+              <div>
+                <strong>Original rows</strong>
+                <span>Data rows before cleaning</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.originalRows }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">CL</div>
+              <div>
+                <strong>Cleaned rows</strong>
+                <span>Data rows remaining after cleaning</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.cleanedRows }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">OC</div>
+              <div>
+                <strong>Original columns</strong>
+                <span>Columns in the uploaded dataset</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.originalColumns }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">CC</div>
+              <div>
+                <strong>Cleaned columns</strong>
+                <span>Columns retained after cleaning</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.cleanedColumns }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">−</div>
+              <div>
+                <strong>Empty columns removed</strong>
+                <span>Columns without data below the header</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.removedColumns }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">RH</div>
+              <div>
+                <strong>Repeated headers removed</strong>
+                <span>Repeated header rows found in the data</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.repeatedHeaderRows }}</strong>
+          </div>
+
+          <div class="change-row">
+            <div class="change-left">
+              <div class="change-icon">DR</div>
+              <div>
+                <strong>Duplicate rows removed</strong>
+                <span>Repeated data rows removed during cleaning</span>
+              </div>
+            </div>
+            <strong class="change-value">{{ report.duplicateRows }}</strong>
+          </div>
+
+        </div>
+
+        <div class="structural-note">
+          <strong>Cleaning result</strong>
+          <p>
+            The cleaned dataset contains
+            {{ report.cleanedRows }} rows and
+            {{ report.cleanedColumns }} columns.
+            {{ report.removedColumns }} empty columns were removed.
+          </p>
+        </div>
+      </section>
+
+      <!-- Before and After Quality -->
+      <section class="quality-section">
+        <div class="section-heading">
+          <span class="eyebrow">QUALITY COMPARISON</span>
+          <h3>Before and After Quality</h3>
+          <p>Compare the dataset quality score before and after cleaning.</p>
+        </div>
+
+        <div class="quality-comparison">
+
+          <div class="quality-box">
+            <span>ORIGINAL QUALITY</span>
+            <strong>
+              {{ report.originalQualityScore | number:'1.1-2' }}
+            </strong>
+            <small>Out of 100</small>
+
+            <div class="quality-track">
+              <div
+                class="quality-fill before-fill"
+                [style.width.%]="report.originalQualityScore">
+              </div>
+            </div>
+          </div>
+
+          <div class="quality-arrow">→</div>
+
+          <div class="quality-box after">
+            <span>CLEANED QUALITY</span>
+            <strong>
+              {{ report.cleanedQualityScore | number:'1.1-2' }}
+            </strong>
+            <small>Out of 100</small>
+
+            <div class="quality-track">
+              <div
+                class="quality-fill after-fill"
+                [style.width.%]="report.cleanedQualityScore">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="improvement-box">
+          <div>
+            <span>QUALITY SCORE CHANGE</span>
+            <p>Difference between the original and cleaned scores.</p>
+          </div>
+
+          <strong>
+            {{ report.qualityImprovement > 0 ? '+' : '' }}{{ report.qualityImprovement | number:'1.1-2' }}
+            <small>points</small>
+          </strong>
+        </div>
+      </section>
+
+      <!-- Recommended Actions -->
+      <section class="interpretation-section">
+        <span class="eyebrow">NEXT STEPS</span>
+        <h3>Recommended Actions</h3>
+
+        <ul class="recommendation-list">
+          <li *ngFor="let recommendation of report.recommendations">
+            {{ recommendation }}
+          </li>
+        </ul>
+
+        <small>
+          Recommendations are based on the quality findings from your uploaded dataset.
+          Review the data before using it for business or analytical decisions.
+        </small>
+      </section>
+
+      <!-- Footer Actions -->
+      
+    <div class="report-actions">
+      <a routerLink="/datasets" class="secondary-button">
+        ← Back to Datasets
+      </a>
+
+
+
+
+      <div class="download-section">
+      <button
+        type="button"
+        class="download-button"
+        (click)="downloadCleanedDataset()"
+        [disabled]="downloading || loading || !report">
+
+        {{ downloading ? 'Preparing Download...' : 'Download Cleaned Excel' }}
+      </button>
+
+      <p *ngIf="downloadMessage" class="success-message">
+        {{ downloadMessage }}
+      </p>
+
+      <p *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </p>
+    </div>
+
+
+
+
+
+      <a routerLink="/upload" class="primary-button">
+        Analyze Another Dataset →
+      </a>
+    </div>
+
+    </ng-container>
+
+  </main>
+</div>
+
+
+
+
+
+
+
+
